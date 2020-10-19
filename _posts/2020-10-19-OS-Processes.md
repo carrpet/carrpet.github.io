@@ -23,4 +23,4 @@ The OS maintains a summary of each of its processes within a process control blo
 
 ## Process State
 The process state diagram is shown: 
-![alt text](https://github.com/carrpet/carrpet.github.io/blob/main/assets/img/diagram-of-process-state.jpg "Process State Diagram")
+<img src="{{site.baseurl}}/assets/img/diagram-of-process-state.jpg">
