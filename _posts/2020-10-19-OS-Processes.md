@@ -22,3 +22,5 @@ When a process is created, the operating system assigns to a process a virtual a
 The OS maintains a summary of each of its processes within a process control block.  The data stored within a PCB includes things such as process state, process id, program counter, registers, memory limits, and open files.
 
 ## Process State
+The process state diagram is shown: 
+![alt text](https://github.com/carrpet/carrpet.github.io/blob/main/assets/img/diagram-of-process-state.jpg "Process State Diagram")
