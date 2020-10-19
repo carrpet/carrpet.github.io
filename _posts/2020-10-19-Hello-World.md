@@ -1,5 +1,6 @@
 ---
 title: "My First Post!"
+categories: Other
 ---
 
 # Welcome to My Blog!
