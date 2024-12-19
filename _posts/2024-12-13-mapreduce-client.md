@@ -14,6 +14,7 @@ The other day I wrote a bit about the high level goals for the MapReduce project
 What is it?  Imagine a batch job submission interface.  You tell the computer to do some work, submit the job, and then go do other stuff while your job request is being processed.  Later, you come back to check if the result has been output.  In essence, these jobs are asynchronous and potentially long lasting.  The system might be shared with many other users who also want to submit jobs.  Based on this description, let's characterize the behavior of this system:
 
 ## Requirements
+In the last post we said that at a high level, the role of this component is to provide a user interface for MapReduce job submissions. 
 ### Responsibilities
 #### Job queue management
 #### Tell master what the next job is
