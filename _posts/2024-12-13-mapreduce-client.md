@@ -13,6 +13,7 @@ What is it?  Imagine a batch job submission interface.  You tell the computer to
 
 
 ## Requirements
+In the last post we said that at a high level, the role of this component is to provide a user interface for MapReduce job submissions. 
 ### Responsibilities
 #### Job queue management
 How will the component manage job submissions? The simplest solution would be to have the application maintain an in-memory queue.    Well, presumably job submissions will be queued up, and the item at the head of the question will be determined by a policy that can be applied on the queue (perhaps FIFO, or priority, or something else).  Since we are going for simplicity, we'll just serve up the jobs in FIFO order for now. 
