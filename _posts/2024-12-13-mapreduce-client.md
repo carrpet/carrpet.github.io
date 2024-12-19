@@ -9,13 +9,14 @@ The other day I wrote a bit about the high level goals for the MapReduce project
 ## Intro 
 
 ### Introduce what we need from job submission client 
-#### Main unit of work for the client
-#### How does it interact with the other components
 What is it?  Imagine a batch job submission interface.  You tell the computer to do some work, submit the job, and then go do other stuff while your job request is being processed.  Later, you come back to check if the result has been output.  In essence, these jobs are asynchronous and potentially long lasting.  The system might be shared with many other users who also want to submit jobs.  Based on this description, let's characterize the behavior of this system:
+
 
 ## Requirements
 ### Responsibilities
 #### Job queue management
+How will the component manage job submissions? The simplest solution would be to have the application maintain an in-memory queue.    Well, presumably job submissions will be queued up, and the item at the head of the question will be determined by a policy that can be applied on the queue (perhaps FIFO, or priority, or something else).  Since we are going for simplicity, we'll just serve up the jobs in FIFO order for now. 
+#### How does it interact with the other components
 #### Tell master what the next job is
 ### System Attributes
 #### Highly Available
