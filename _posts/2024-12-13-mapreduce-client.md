@@ -11,40 +11,37 @@ The other day I wrote a bit about the high level goals for the MapReduce project
 ### Introduce what we need from job submission client 
 What is it?  Imagine a batch job submission interface.  You tell the computer to do some work, submit the job, and then go do other stuff while your job request is being processed.  Later, you come back to check if the result has been output.  In essence, these jobs are asynchronous and potentially long lasting.  The system might be shared with many other users who also want to submit jobs.  Based on this description, let's characterize the behavior of this system:
 
+### Assumptions
+The job submission client serves both a user interface and a web service that provides an API for both the UI and the master to consume.  In a production-grade architecture these roles could be divided into separate components but for our purposes it's sufficient to have these roles in one component.
+ 
+### Functional Requirements
+The primary role of the job client is to ingest a job submission from a user and maintain a queue of job submissions that are waiting to be processed by the MapReduce component.  Optionally, the ordering of the queue could be governed by a given policy, such as priority, and it's up to the job client to enforce this.  For simplicity we will assume that the queue has FIFO semantics.
 
-## Requirements
-In the last post we said that at a high level, the role of this component is to provide a user interface for MapReduce job submissions. 
-### Responsibilities
-#### Job queue management
-How will the component manage job submissions? The simplest solution would be to have the application maintain an in-memory queue.    Well, presumably job submissions will be queued up, and the item at the head of the question will be determined by a policy that can be applied on the queue (perhaps FIFO, or priority, or something else).  Since we are going for simplicity, we'll just serve up the jobs in FIFO order for now. 
-#### How does it interact with the other components
-#### Tell master what the next job is
-### System Attributes
-#### Highly Available
-#### Fault Tolerant
-#### Not a SPF
+Since the master is the orchestrator for the MapReduce jobs, it is the master's responsibility to consume the jobs in the queue.
 
-## Design Process for component
-### Addressing Responsibilities
-#### Job queue
-#### tell master
-### Addressing attributes
-#### Highly Available
-#### Fault Tolerant
-#### Not a SPF
 
-## Implementation
-### Responsibilties
-### Attributes
+### Non-Functional Requirements
+
+#### High Availability
+We want the job client system to be highly available to users.  We want the exposed job queue to be highly available to any consumer.
+
+#### Fault Tolerance
+The most important aspect here is that once a job is submitted by the user, the system ensures that the job is eventually run to completion.  If the job is lost before being processed, then we have a failure of system since it has broken its guarantee to the user.  
+
+#### Other non-functional requirements
+In thinking about the non-functional requirements, we observe that the usage patterns for this system are synonymous with a batch processing system.  The MapReduce jobs in general are long-running background processes for which the user submits the job and then comes back at a later time to check on its status.  Additionally, in the future we'd like to support the ability to chain together MapReduce operations, so that the output of one MapReduce becomes the input for the next job.  For these reasons, it's important that the submitted jobs aren't lost even if the application is down or restarted.  This calls for data persistance for the job submissions: a submitted job should remain in the queue until it has been processed by the master. 
+
+### Implementation of Functional Requirements
+Let's first decide on the communication patterns between the job submission and its clients, as this will guide our implementation decisions for all the functional requirmeents.  The communication between the user and the job submission component is pretty straight forward.  The user will submit a job by POSTing an html form in the web browser. So they will communicate in a request/response fashion.  A straightforward implementation for this would be for job submission component to implement a web server that provides some HTTP/s endpoints for the user to consume.
+
+
+
 ### implementation issues
 
 ## testing and demo functionality
 
 ## lessons learned - outtro
 
-1. Job submissions from many users will be queued up.  It may take a while to process them, and we don't want to lose them if we encounter some sort of failure.
-
-2. The master process will process jobs in some sort of order.  In general the master's only responsibility is to get the next job and ensure that it is processed to completion.
 
 Now that we have the background of what we want the components to achieve, let's design the client component.
 
